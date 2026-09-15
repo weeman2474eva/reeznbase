@@ -30,12 +30,16 @@ jobs:
           done
           find . -maxdepth 4 -type f -printf '%p %s bytes\n' | tee -a archive-listing.txt
           apk="$(find extracted . -type f -iname '*.apk' -print -quit)"
-          if [ -z "$apk" ]; then
+          if [ -n "$apk" ]; then
+            cp "$apk" input.apk
+          elif [ -f extracted/AndroidManifest.xml ] && [ -f extracted/classes.dex ]; then
+            echo "The ZIP files contain split APK contents; merging them into input.apk."
+            (cd extracted && zip -qr ../input.apk .)
+          else
             cp archive-listing.txt apk-inspection-report.txt
-            echo "::error::No APK was found inside the uploaded ZIP files."
+            echo "::error::The ZIP files do not contain an APK or a complete split APK."
             exit 1
           fi
-          cp "$apk" input.apk
           echo "APK_PATH=input.apk" >> "$GITHUB_ENV"
 
       - name: Install APKTool
