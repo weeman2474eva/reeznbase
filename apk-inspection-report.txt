@@ -2474,7 +2474,7 @@ Archive:  ./2.zip
 ./.git/hooks/pre-rebase.sample 4898 bytes
 ./.git/logs/HEAD 218 bytes
 ./.git/info/exclude 240 bytes
-./.git/index 459 bytes
+./.git/index 1183 bytes
 ./.git/HEAD 21 bytes
 ./.git/config 868 bytes
 ./.git/config.worktree 83 bytes
@@ -2482,14 +2482,29 @@ Archive:  ./2.zip
 ./.git/shallow 41 bytes
 ./.git/description 73 bytes
 ./.git/refs/heads/main 41 bytes
+./.git/objects/2b/98fcfaf0b2f32f3368953644ab2213ea1a147b 1485 bytes
 ./.git/objects/ef/5f6c872b37547ebdc24178c00d73728e8cb9c8 12333422 bytes
-./.git/objects/35/4bcec463efeae12e3c480f12ba00b50cf47970 1384 bytes
 ./.git/objects/75/66af72f86c8b0f61c7bcb6a464f3401920128b 3627395 bytes
-./.git/objects/93/0d80248ba0f5f12b428ce0213330379516da3d 159 bytes
-./.git/objects/4a/09603833eda41b97b12186e1f36b9e9dbdac32 61819 bytes
-./.git/objects/3f/cbbcc360585cb9a390e69b347489385a770440 52 bytes
-./.git/objects/90/ef77c5ba7ab9cb3be4c81c888c09f4bf6724d4 60 bytes
-./.git/objects/2c/ec0936827883f0f8a60d796db04addbcef8195 184 bytes
+./.git/objects/9a/578e0e92c0c12aae91fb3e26ab00fc90082b3c 283 bytes
+./.git/objects/32/8370e65dcb075bcbfa034b3e959a6b6f917148 2702 bytes
+./.git/objects/00/87cf93ebb15245132a1931ffb57cc4a4778bf7 59 bytes
+./.git/objects/1d/6dcbb5b39ad42fcc2135a879745122de2b769c 680 bytes
+./.git/objects/c8/1e948cc726fa43d740d27e325e5c15a3e626d0 56903 bytes
+./.git/objects/15/d9c3818954896e172cbf3db4d05d83fd141e2d 2464 bytes
+./.git/objects/16/cbc6cee209171f662d18d03a0805722612d774 184 bytes
+./.git/objects/28/835287efd019a104682ed6468af73cd10c5265 563 bytes
+./.git/objects/a3/121e30a931d325194a0eb0ea313156eb4a2040 1509 bytes
+./.git/objects/e0/7f3f4fdc67d533859d480be2253e5b35059a4b 10437 bytes
+./.git/objects/ce/5c7f824491ceac5247a9a408479d3503f176b6 51 bytes
+./.git/objects/80/37d0e5eecc69d207deca46149e8c5c9d1e183c 186 bytes
+./.git/objects/f4/e74650bb1a96dda95806720d3061d38d82f5b6 61871 bytes
+./inspection/PlayerPreferencesViewModel.smali 16289 bytes
+./inspection/FragmentHome$1.smali 1553 bytes
+./inspection/FragmentHomeTV$1.smali 2426 bytes
+./inspection/LandingActivity.smali 17224 bytes
+./inspection/QualityAdapter.smali 6989 bytes
+./inspection/MainActivity.smali 55175 bytes
+./inspection/ReeznPlayer.smali 398844 bytes
 ./extracted/messaging_event.proto 84 bytes
 ./extracted/kotlin/kotlin.kotlin_builtins 18653 bytes
 ./extracted/kotlin/internal/internal.kotlin_builtins 583 bytes
@@ -4868,11 +4883,11 @@ Archive:  ./2.zip
 ./extracted/META-INF/CERT.RSA 1714 bytes
 ./extracted/META-INF/CERT.SF 234850 bytes
 ./extracted/META-INF/MANIFEST.MF 234802 bytes
-./apk-inspection-report.txt 411467 bytes
+./apk-inspection-report.txt 411577 bytes
 ./2.zip 12886923 bytes
 ./1.zip 3647798 bytes
 ./archive-listing.txt 349649 bytes
-./.github/workflows/inspect-apk.yml 3638 bytes
+./.github/workflows/inspect-apk.yml 6772 bytes
 ===== MANIFEST ACTIVITIES =====
 79:        <activity android:exported="true" android:hardwareAccelerated="true" android:name="com.rmedia.rplayer.activities.MainActivity" android:theme="@style/Theme.App.Starting"/>
 80:        <activity android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize|uiMode" android:exported="true" android:launchMode="singleTask" android:name="com.rtx.loginuix.activity.Intro" android:screenOrientation="sensorLandscape" android:theme="@style/AppTheme.NoActionBar">
