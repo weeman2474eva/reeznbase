@@ -3,7 +3,12 @@ name: Inspect APK
 on:
   push:
     branches: [ main, master ]
+    paths-ignore:
+      - apk-inspection-report.txt
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   inspect:
@@ -16,15 +21,17 @@ jobs:
         run: |
           set -e
           mkdir -p extracted
+          : > archive-listing.txt
           for archive in ./*.zip; do
             [ -f "$archive" ] || continue
-            echo "CONTENTS OF $archive"
-            unzip -l "$archive"
+            echo "CONTENTS OF $archive" | tee -a archive-listing.txt
+            unzip -l "$archive" | tee -a archive-listing.txt
             unzip -o "$archive" -d extracted
           done
-          find . -maxdepth 4 -type f -printf '%p %s bytes\n'
+          find . -maxdepth 4 -type f -printf '%p %s bytes\n' | tee -a archive-listing.txt
           apk="$(find extracted . -type f -iname '*.apk' -print -quit)"
           if [ -z "$apk" ]; then
+            cp archive-listing.txt apk-inspection-report.txt
             echo "::error::No APK was found inside the uploaded ZIP files."
             exit 1
           fi
@@ -39,15 +46,26 @@ jobs:
       - name: Decode APK
         run: java -jar apktool.jar d -f "$APK_PATH" -o decoded
 
-      - name: Report app and candidate code
+      - name: Build inspection report
         shell: bash
         run: |
-          echo "===== MANIFEST ACTIVITIES ====="
-          grep -nE 'activity|MAIN|LAUNCHER' decoded/AndroidManifest.xml | head -120 || true
-          echo "===== BACK HANDLING ====="
-          grep -RniE 'onBackPressed|KEYCODE_BACK|finishAffinity|moveTaskToBack' decoded/smali* | head -240 || true
-          echo "===== QUALITY / RESOLUTION ====="
-          grep -RniE 'selectedQuality|QualityAdapter|HlsQuality|HIGHEST|video_quality|resolution' decoded/smali* decoded/res/values* | head -300 || true
+          {
+            cat archive-listing.txt
+            echo "===== MANIFEST ACTIVITIES ====="
+            grep -nE 'activity|MAIN|LAUNCHER' decoded/AndroidManifest.xml | head -120 || true
+            echo "===== BACK HANDLING ====="
+            grep -RniE 'onBackPressed|KEYCODE_BACK|finishAffinity|moveTaskToBack' decoded/smali* | head -240 || true
+            echo "===== QUALITY / RESOLUTION ====="
+            grep -RniE 'selectedQuality|QualityAdapter|HlsQuality|HIGHEST|video_quality|resolution' decoded/smali* decoded/res/values* | head -300 || true
+          } > apk-inspection-report.txt
+
+      - name: Publish inspection report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add apk-inspection-report.txt
+          git commit -m "Add APK inspection report" || exit 0
+          git push
 
       - name: Upload decoded APK
         uses: actions/upload-artifact@v4
