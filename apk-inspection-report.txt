@@ -2472,9 +2472,9 @@ Archive:  ./2.zip
 ./.git/hooks/commit-msg.sample 1972 bytes
 ./.git/hooks/prepare-commit-msg.sample 1492 bytes
 ./.git/hooks/pre-rebase.sample 4898 bytes
-./.git/logs/HEAD 220 bytes
+./.git/logs/HEAD 218 bytes
 ./.git/info/exclude 240 bytes
-./.git/index 371 bytes
+./.git/index 459 bytes
 ./.git/HEAD 21 bytes
 ./.git/config 868 bytes
 ./.git/config.worktree 83 bytes
@@ -2482,13 +2482,14 @@ Archive:  ./2.zip
 ./.git/shallow 41 bytes
 ./.git/description 73 bytes
 ./.git/refs/heads/main 41 bytes
-./.git/objects/2f/4de8f193bbe6fe9d12afcab47409c88e990394 60 bytes
 ./.git/objects/ef/5f6c872b37547ebdc24178c00d73728e8cb9c8 12333422 bytes
+./.git/objects/35/4bcec463efeae12e3c480f12ba00b50cf47970 1384 bytes
 ./.git/objects/75/66af72f86c8b0f61c7bcb6a464f3401920128b 3627395 bytes
-./.git/objects/72/bf17cf7af41e495436e98f5b32dbd889d4ebed 52 bytes
-./.git/objects/da/7ce2ce3c452130b180be277aa3d957205b5681 1239 bytes
-./.git/objects/08/d888cf6bce5ac4204c34a442f093189e7f4cca 189 bytes
-./.git/objects/ec/dec44132cfb49be7b59eb416c717ec15566449 109 bytes
+./.git/objects/93/0d80248ba0f5f12b428ce0213330379516da3d 159 bytes
+./.git/objects/4a/09603833eda41b97b12186e1f36b9e9dbdac32 61819 bytes
+./.git/objects/3f/cbbcc360585cb9a390e69b347489385a770440 52 bytes
+./.git/objects/90/ef77c5ba7ab9cb3be4c81c888c09f4bf6724d4 60 bytes
+./.git/objects/2c/ec0936827883f0f8a60d796db04addbcef8195 184 bytes
 ./extracted/messaging_event.proto 84 bytes
 ./extracted/kotlin/kotlin.kotlin_builtins 18653 bytes
 ./extracted/kotlin/internal/internal.kotlin_builtins 583 bytes
@@ -4867,10 +4868,11 @@ Archive:  ./2.zip
 ./extracted/META-INF/CERT.RSA 1714 bytes
 ./extracted/META-INF/CERT.SF 234850 bytes
 ./extracted/META-INF/MANIFEST.MF 234802 bytes
+./apk-inspection-report.txt 411467 bytes
 ./2.zip 12886923 bytes
 ./1.zip 3647798 bytes
 ./archive-listing.txt 349649 bytes
-./.github/workflows/inspect-apk.yml 2847 bytes
+./.github/workflows/inspect-apk.yml 3638 bytes
 ===== MANIFEST ACTIVITIES =====
 79:        <activity android:exported="true" android:hardwareAccelerated="true" android:name="com.rmedia.rplayer.activities.MainActivity" android:theme="@style/Theme.App.Starting"/>
 80:        <activity android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize|uiMode" android:exported="true" android:launchMode="singleTask" android:name="com.rtx.loginuix.activity.Intro" android:screenOrientation="sensorLandscape" android:theme="@style/AppTheme.NoActionBar">
