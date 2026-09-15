@@ -65,9 +65,17 @@ jobs:
 
       - name: Publish inspection report
         run: |
+          mkdir -p inspection
+          cp decoded/smali_classes2/com/rmedia/rplayer/activities/MainActivity.smali inspection/
+          cp decoded/smali_classes2/com/rmedia/rplayer/features/landing/LandingActivity.smali inspection/
+          cp decoded/smali_classes2/com/rmedia/rplayer/features/mainfragments/FragmentHome\$1.smali inspection/
+          cp decoded/smali_classes2/com/rmedia/rplayer/features/mainfragments/FragmentHomeTV\$1.smali inspection/
+          cp decoded/smali_classes2/com/rmedia/rplayer/features/player/PlayerPreferencesViewModel.smali inspection/
+          cp decoded/smali_classes2/com/rmedia/rplayer/features/player/QualityAdapter.smali inspection/
+          cp decoded/smali_classes2/com/rmedia/rplayer/features/player/ReeznPlayer.smali inspection/
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add apk-inspection-report.txt
+          git add apk-inspection-report.txt inspection
           git commit -m "Add APK inspection report" || exit 0
           git push
 
