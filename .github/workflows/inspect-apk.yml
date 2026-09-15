@@ -79,6 +79,74 @@ jobs:
           git commit -m "Add APK inspection report" || exit 0
           git push
 
+      - name: Patch back-to-exit and highest quality default
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          main = Path("decoded/smali_classes2/com/rmedia/rplayer/activities/MainActivity.smali")
+          text = main.read_text()
+          pattern = r"\.method public onBackPressed\(\)V.*?\.end method"
+          replacement = """.method public onBackPressed()V
+              .locals 0
+
+              invoke-virtual {p0}, Landroid/app/Activity;->finishAffinity()V
+
+              return-void
+          .end method"""
+          text, count = re.subn(pattern, replacement, text, count=1, flags=re.S)
+          if count != 1:
+              raise SystemExit("MainActivity back method was not patched")
+          main.write_text(text)
+
+          player = Path("decoded/smali_classes2/com/rmedia/rplayer/features/player/ReeznPlayer.smali")
+          text = player.read_text()
+          start = text.index(".method private prepareQualityData()V")
+          end = text.index(".end method", start)
+          method = text[start:end]
+          marker = """    :cond_9
+              iget-object v1, p0, Lcom/rmedia/rplayer/features/player/ReeznPlayer;->prefsViewModel:Lcom/rmedia/rplayer/features/player/PlayerPreferencesViewModel;"""
+          insert = """    :cond_9
+              # Default to the final listed stream quality (highest available).
+              invoke-virtual {v0}, Ljava/util/ArrayList;->size()I
+
+              move-result v4
+
+              add-int/lit8 v4, v4, -0x1
+
+              if-gez v4, :quality_default_ready
+
+              const/4 v4, 0x0
+
+              :quality_default_ready
+              iget-object v1, p0, Lcom/rmedia/rplayer/features/player/ReeznPlayer;->prefsViewModel:Lcom/rmedia/rplayer/features/player/PlayerPreferencesViewModel;"""
+          if marker not in method:
+              raise SystemExit("Quality selection point was not found")
+          method = method.replace(marker, insert, 1)
+          text = text[:start] + method + text[end:]
+          player.write_text(text)
+          PY
+
+      - name: Rebuild and sign APK
+        shell: bash
+        run: |
+          set -e
+          java -jar apktool.jar b decoded -o reezn-fixed-unsigned.apk
+          build_tools="$(find "$ANDROID_HOME/build-tools" -mindepth 1 -maxdepth 1 -type d | sort -V | tail -1)"
+          "$build_tools/zipalign" -f 4 reezn-fixed-unsigned.apk reezn-fixed-aligned.apk
+          keytool -genkeypair -v -keystore reezn-build.jks -storepass reezn123 -keypass reezn123 -alias reezn -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Reezn Build, OU=Android, O=Reezn, L=NA, S=NA, C=GB"
+          "$build_tools/apksigner" sign --ks reezn-build.jks --ks-pass pass:reezn123 --key-pass pass:reezn123 --out reezn-back-exit-highest-quality.apk reezn-fixed-aligned.apk
+          "$build_tools/apksigner" verify --verbose reezn-back-exit-highest-quality.apk
+
+      - name: Upload fixed APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: reezn-fixed-apk
+          path: reezn-back-exit-highest-quality.apk
+          retention-days: 7
+
       - name: Upload decoded APK
         uses: actions/upload-artifact@v4
         with:
