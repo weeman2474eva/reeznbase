@@ -1,0 +1,57 @@
+name: Inspect APK
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Locate uploaded APK
+        shell: bash
+        run: |
+          set -e
+          mkdir -p extracted
+          for archive in ./*.zip; do
+            [ -f "$archive" ] || continue
+            echo "CONTENTS OF $archive"
+            unzip -l "$archive"
+            unzip -o "$archive" -d extracted
+          done
+          find . -maxdepth 4 -type f -printf '%p %s bytes\n'
+          apk="$(find extracted . -type f -iname '*.apk' -print -quit)"
+          if [ -z "$apk" ]; then
+            echo "::error::No APK was found inside the uploaded ZIP files."
+            exit 1
+          fi
+          cp "$apk" input.apk
+          echo "APK_PATH=input.apk" >> "$GITHUB_ENV"
+
+      - name: Install APKTool
+        run: |
+          wget -q https://github.com/iBotPeaches/Apktool/releases/download/v2.11.1/apktool_2.11.1.jar -O apktool.jar
+          java -jar apktool.jar --version
+
+      - name: Decode APK
+        run: java -jar apktool.jar d -f "$APK_PATH" -o decoded
+
+      - name: Report app and candidate code
+        shell: bash
+        run: |
+          echo "===== MANIFEST ACTIVITIES ====="
+          grep -nE 'activity|MAIN|LAUNCHER' decoded/AndroidManifest.xml | head -120 || true
+          echo "===== BACK HANDLING ====="
+          grep -RniE 'onBackPressed|KEYCODE_BACK|finishAffinity|moveTaskToBack' decoded/smali* | head -240 || true
+          echo "===== QUALITY / RESOLUTION ====="
+          grep -RniE 'selectedQuality|QualityAdapter|HlsQuality|HIGHEST|video_quality|resolution' decoded/smali* decoded/res/values* | head -300 || true
+
+      - name: Upload decoded APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: decoded-apk
+          path: decoded
+          retention-days: 3
